@@ -153,6 +153,11 @@ $(document).ready(function () {
         return Math.floor(Math.random() * 5) + 1;
     }
 
+    $('#products').on('click', '.product-card', function () {
+        var productId = $(this).data('id');
+        window.location.href = `/product/${productId}`;
+    });
+
     $('#products').on('click', '.add', function (e) {
         e.stopPropagation();
     });
@@ -250,7 +255,6 @@ $(document).ready(function () {
     }
 
     loadWishlist();
-
     function loadWishlist() {
         $.ajax({
             url: '/api/wishlist',
@@ -261,32 +265,56 @@ $(document).ready(function () {
                     wishlistContainer.innerHTML = '';
 
                     if (data.wishlists.length > 0) {
+                        let tableContent = `
+                            <table class="table" style="background-color: transparent; border: 1px solid #dee2e6;">
+                                <thead style="background-color: transparent; border-bottom: 2px solid #dee2e6;">
+                                    <tr>
+                                        <th scope="col" class="text-center">Product Image</th>
+                                        <th scope="col" class="text-center">Name</th>
+                                        <th scope="col" class="text-center">Unit Price</th>
+                                        <th scope="col" class="text-center">Stock Status</th>
+                                        <th scope="col" class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+
                         data.wishlists.forEach(wishlist => {
                             const product = wishlist.product;
-                            const addToCartButton = wishlist.in_cart
-                                ? ''
-                                : `<button type="button" class="btn btn-lightblue add mt-3" data-product-id="${product.id}">Add to cart</button>`;
+                            const price = `₱${product.cost}`;
+                            const stockStatus = product.quantity > 0 ? 'In Stock' : 'Out of Stock';
+                            const actionHtml = product.quantity > 0
+                                ? `<i class="fas fa-cart-plus fa-2x add" data-product-id="${product.id}" style="cursor: pointer;"></i>`
+                                : '';
 
-                            const wishlistItem = `
-                                <div class="card mb-3">
-                                    <div class="row no-gutters">
-                                        <div class="col-md-4">
-                                            <img src="${product.img_path}" class="card-img" alt="${product.name}">
+                            tableContent += `
+                                <tr style="background-color: transparent;">
+                                    <td class="text-center">
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <button class="btn btn-link remove-wishlist-item" data-product-id="${product.id}" style="color: red;">
+                                                <i class="fas fa-trash-alt fa-lg"></i>
+                                            </button>
+                                            <img src="${product.img_path}" class="img-thumbnail ml-2" style="width: 105px; height: 110%;" alt="${product.name}">
                                         </div>
-                                        <div class="col-md-8">
-                                            <div class="card-body">
-                                                <h5 class="card-title">Product Name: ${product.name}</h5>
-                                                <p class="card-text">Description: ${product.description}</p>
-                                                <p class="card-text">Price: $${product.cost}</p>
-                                                <button class="btn btn-danger remove-wishlist-item" data-product-id="${product.id}">Remove</button>
-                                                ${addToCartButton}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <strong>${product.name}</strong>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <strong>${price}</strong>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        ${stockStatus}
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        ${actionHtml}
+                                    </td>
+                                </tr>
                             `;
-                            wishlistContainer.innerHTML += wishlistItem;
                         });
+
+                        tableContent += `</tbody></table>`;
+                        wishlistContainer.innerHTML = tableContent;
 
                         document.querySelectorAll('.remove-wishlist-item').forEach(button => {
                             button.addEventListener('click', function() {
@@ -294,13 +322,13 @@ $(document).ready(function () {
                             });
                         });
 
-                        document.querySelectorAll('.add').forEach(button => {
-                            button.addEventListener('click', function() {
+                        document.querySelectorAll('.fa-cart-plus').forEach(icon => {
+                            icon.addEventListener('click', function() {
                                 addToCart(this.dataset.productId);
                             });
                         });
                     } else {
-                        wishlistContainer.innerHTML = '<p>Your wishlist is empty.</p>';
+                        wishlistContainer.innerHTML = '<p class="text-center">Your wishlist is empty.</p>';
                     }
                 }
             },
@@ -309,6 +337,14 @@ $(document).ready(function () {
             }
         });
     }
+
+
+
+
+    // Call the function to load the wishlist when the page loads
+    $(document).ready(function() {
+        loadWishlist();
+    });
 
 
     function removeWishlistItem(productId) {
@@ -325,6 +361,33 @@ $(document).ready(function () {
             },
             error: function(xhr) {
                 console.error('Error removing item:', xhr);
+            }
+        });
+    }
+
+    $('#searchInput').on('input', function () {
+        var query = $(this).val();
+        if (query) {
+            searchProducts(query);
+        } else {
+            nextPageUrl = '/api/shop?page=1';
+            $('#products').empty();
+            loadMoreProducts();
+        }
+    });
+
+    function searchProducts(query) {
+        $.ajax({
+            url: '/api/search',
+            type: 'GET',
+            data: { query: query },
+            dataType: 'json',
+            success: function (response) {
+                $('#products').empty(); // Clear previous results
+                $('#products').append(generateProductsHtml(response.data)); // Append new results
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching search results:", error);
             }
         });
     }

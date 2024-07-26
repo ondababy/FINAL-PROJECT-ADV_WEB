@@ -20,12 +20,12 @@
             </li>
             <ul class="menu-links">
                 <li class="nav-link">
-                    <a href="{{ route('admin.dashboard') }}"><i class='bx bx-home icon'></i>
+                    <a href="/admin-dashboard"><i class='bx bx-home icon'></i>
                         <span class="text nav-text">Home</span>
                     </a>
                 </li>
                 <li class="nav-link">
-                    <a href="{{ route('admin.profile') }}"><i class='bx bx-user icon'></i>
+                    <a href="/admin/profile"><i class='bx bx-user icon'></i>
                         <span class="text nav-text">Profile</span>
                     </a>
                 </li>
@@ -50,22 +50,22 @@
                     </a>
                 </li>
                 <li class="nav-link">
-                    <a href="{{ route('admin.orders') }}"><i class='bx bx-receipt icon'></i>
+                    <a href="/orders"><i class='bx bx-receipt icon'></i>
                         <span class="text nav-text">Orders</span>
                     </a>
                 </li>
                 <li class="nav-link">
-                    <a href="{{ route('admin.stocks') }}"><i class='bx bx-store icon'></i>
+                    <a href="/stocks"><i class='bx bx-store icon'></i>
                         <span class="text nav-text">Inventory</span>
                     </a>
                 </li>
                 <li class="nav-link">
-                    <a href="{{ route('admin.users') }}"><i class='bx bx-user icon'></i>
+                    <a href="/users"><i class='bx bx-user icon'></i>
                         <span class="text nav-text">Users</span>
                     </a>
                 </li>
                 <li class="nav-link">
-                    <a href="{{ route('admin.charts') }}"><i class='bx bx-bar-chart-alt-2 icon'></i>
+                    <a href="/charts"><i class='bx bx-bar-chart-alt-2 icon'></i>
                         <span class="text nav-text">Charts</span>
                     </a>
                 </li>

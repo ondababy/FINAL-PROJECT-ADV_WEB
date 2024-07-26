@@ -12,7 +12,7 @@ $(document).ready(function() {
         flashMessage.removeClass().addClass('alert alert-' + type).html(message).fadeIn();
         setTimeout(function() {
             flashMessage.fadeOut();
-        }, 5000);
+        }, 2000);
     }
 
     // Handle login form submission

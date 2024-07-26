@@ -46,9 +46,8 @@ $(document).ready(function () {
     });
 
     $("#wishlist-container").on('click', '.add', function () {
-        // Retrieve product ID from data attribute
         var productId = $(this).data('product-id');
-        var quantity = 1; // Default quantity
+        var quantity = 1;
 
         $.ajax({
             type: "POST",
@@ -60,7 +59,6 @@ $(document).ready(function () {
             contentType: "application/json",
             success: function (response) {
                 showAlert(response.message, 'success');
-                fetchCarts(); // Refresh cart items after adding to cart
             },
             error: function (xhr) {
                 var response = JSON.parse(xhr.responseText);
@@ -68,7 +66,6 @@ $(document).ready(function () {
             }
         });
     });
-
 
     $(document).on('click', '.fa-plus', function () {
         var item = $(this).closest('.cart-item');

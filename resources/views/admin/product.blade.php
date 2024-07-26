@@ -14,15 +14,6 @@
                 <div class="card-body">
                     @include('layouts.flash-messages')
                 </div>
-                {{-- <div class="card-body">
-                    <form action="{{ url('products/import') }}" method="POST" enctype="multipart/form-data" class="mt-3">
-                        @csrf
-                        <div class="input-group mb-3">
-                            <input type="file" name="importFile" class="form-control"/>
-                            <button type="submit" class="btn btn-primary">Import</button>
-                        </div>
-                    </form>
-                </div> --}}
 
                 <div class="input-group-custom">
                     <form id="import-form-product" enctype="multipart/form-data">

@@ -14,16 +14,15 @@ class WishlistController extends Controller
         $customerId = auth()->id();
 
         $wishlists = Wishlist::where('customer_id', $customerId)
-                            ->with('product')
-                            ->get();
-
-        $cartItems = \DB::table('customer_product')
-                        ->where('customer_id', $customerId)
-                        ->pluck('product_id')
-                        ->toArray();
+            ->with(['product' => function ($query) {
+                $query->select('id', 'name','cost', 'img_path');
+            }])
+            ->get();
 
         foreach ($wishlists as $wishlist) {
-                $wishlist->in_cart = in_array($wishlist->product_id, $cartItems);
+            $wishlist->product->quantity = \DB::table('stocks')
+                ->where('product_id', $wishlist->product->id)
+                ->value('quantity');
         }
 
         return response()->json([

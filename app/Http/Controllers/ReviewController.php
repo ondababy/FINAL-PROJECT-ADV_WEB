@@ -57,13 +57,7 @@ class ReviewController extends Controller
                 $canReview = true;
             }
         }
-
-        return response()->json([
-            'product' => $product,
-            'canReview' => $canReview,
-            'stars' => $this->calculateRatingStars($product->reviews),
-            'percentage' => $this->calculateRatingPercentage($product->reviews)
-        ]);
+        return view('shop.show', compact('product', 'canReview'));
     }
 
     private function calculateRatingStars($reviews)
