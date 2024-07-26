@@ -25,7 +25,7 @@
                     </a>
                 </li>
                 <li class="nav-link">
-                    <a href="/admin/profile"><i class='bx bx-user icon'></i>
+                    <a href="/admin/profile"><i class='fa-regular fa-address-card icon'></i>
                         <span class="text nav-text">Profile</span>
                     </a>
                 </li>
@@ -55,7 +55,7 @@
                     </a>
                 </li>
                 <li class="nav-link">
-                    <a href="/stocks"><i class='bx bx-store icon'></i>
+                    <a href="/stocks"><i class='fa-solid fa-warehouse icon'></i>
                         <span class="text nav-text">Inventory</span>
                     </a>
                 </li>
@@ -67,6 +67,11 @@
                 <li class="nav-link">
                     <a href="/charts"><i class='bx bx-bar-chart-alt-2 icon'></i>
                         <span class="text nav-text">Charts</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="/payment/method"><i class='bx bx-dollar icon' ></i>
+                        <span class="text nav-text">Payments</span>
                     </a>
                 </li>
                 <li class="nav-link">

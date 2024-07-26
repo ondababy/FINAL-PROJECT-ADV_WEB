@@ -19,6 +19,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\ViewController;
+use App\Http\Controllers\PaymentMethodController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,8 +36,10 @@ use App\Http\Controllers\ViewController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout']);
-Route::get('/search', [SearchController::class, 'search']);
+// Route::get('/search', [SearchController::class, 'search']);
 
+Route::get('/search', [SearchController::class, 'search']);
+Route::get('/autocomplete', [SearchController::class, 'autocomplete']);
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     // API Resources
@@ -44,6 +47,7 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::apiResource('suppliers', SupplierController::class);
     Route::apiResource('products', ProductController::class);
     Route::apiResource('couriers', CourierController::class);
+    Route::apiResource('payment-methods', PaymentMethodController::class);
 
     // Chart Endpoints
     Route::get('/admin/sales-chart', [ChartController::class, 'salesChart']);
@@ -106,7 +110,7 @@ Route::middleware(['auth:sanctum', 'role:admin,customer'])->group(function () {
     Route::delete('/wishlist/remove/{id}', [WishlistController::class, 'remove']);
     Route::get('/wishlist', [WishlistController::class, 'index']);
 
-    Route::get('/shop/search', [SearchController::class, 'search']);
+    // Route::get('/shop/search', [SearchController::class, 'search']);
 });
 
 

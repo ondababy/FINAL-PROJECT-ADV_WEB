@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-// use Laravel\Scout\Searchable;
+use Laravel\Scout\Searchable;
 
 class Product extends Model
 {
     use HasFactory, SoftDeletes;
-    // use Searchable;
+    use Searchable;
 
     protected $fillable = ['name', 'brand_id', 'supplier_id', 'description', 'cost', 'img_path'];
 
@@ -46,23 +46,21 @@ class Product extends Model
         return $this->hasMany(Wishlist::class);
     }
 
-    // public function toSearchableArray()
-    // {
-    //     return [
-    //         'id' => $this->id,
-    //         'name' => $this->name,
-    //     ];
-    // }
+    public function searchableAs(): string
+    {
+        return 'products_index';
+    }
 
-    // public function toSearchableArray()
-    // {
-    //     return [
-    //         'id' => $this->id,
-    //         'name' => $this->name,
-    //         // 'description' => $this->description,
-    //         // 'cost' => $this->cost,
-    //         // 'img_path' => $this->img_path,
-    //     ];
-    // }
+    public function toSearchableArray()
+    {
+        return [
+            'id' => $this->id,  // Ensure the ID is included if needed for search results
+            'name' => $this->name,
+            'description' => $this->description,
+            'brand_name' => $this->brand ? $this->brand->name : null,
+            'cost' => $this->cost,
+            // Include other fields as needed
+        ];
+    }
 }
 

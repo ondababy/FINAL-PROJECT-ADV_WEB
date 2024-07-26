@@ -46,7 +46,9 @@
     <script src="{{ asset('js/admin/user.js') }}"></script>
     <script src="{{ asset('js/admin/order.js') }}"></script>
     <script src="{{ asset('js/admin/chart.js') }}"></script>
+    <script src="{{ asset('js/admin/payment.js') }}"></script>
     <script src="{{ asset('js/admin/dashboard.js') }}"></script>
+    <script src="{{ asset('js/admin/crud.js') }}"></script>
 
     <script src="{{ asset('js/design/sidebar.js') }}"></script>
     <script src="{{ asset('js/design/header.js') }}"></script>

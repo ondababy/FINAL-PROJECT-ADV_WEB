@@ -5,10 +5,13 @@
 <div class="container-fluid" style="border: 2px solid black; width: 100%; max-width: 2000px;">
     <div class="row mb-3 mt-3">
         <div class="col-lg-12 d-flex justify-content-end">
-            <div class="search-bar-container">
-                <input type="text" id="searchInput" class="form-control search-bar" placeholder="Search Products..." />
+            <div class="search-bar-container mt-2">
+                {{-- <input type="text" id="searchInput" class="form-control search-bar" placeholder="Search Products..." /> --}}
+                <input type="text" id="searchInput" class="form-control" placeholder="Search for products...">
+                {{-- <div id="autocompleteSuggestions" class="autocomplete-suggestions"></div> --}}
                 <span class="search-icon"><i class="fas fa-search"></i></span>
             </div>
+            <div id="autocomplete-results" class="autocomplete-results"></div>
         </div>
     </div>
     <div class="row">

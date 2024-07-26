@@ -73,7 +73,7 @@ crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="{{ asset('js/transaction.js') }}"></script>
 <script src="{{ asset('js/shop.js') }}"></script>
 <script src="{{ asset('js/order.js') }}"></script>
-{{-- <script src="{{ asset('js/wishlist.js') }}"></script> --}}
+<script src="{{ asset('js/wishlist.js') }}"></script>
 <script src="{{ asset('js/design/algolia.js') }}"></script>
 @yield('scripts')
 </html>

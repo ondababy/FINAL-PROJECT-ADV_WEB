@@ -318,6 +318,7 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             success: function(response) {
+                table.ajax.reload();
                 showFlashMessage(response.message);
             },
             error: function(xhr) {

@@ -309,6 +309,7 @@ $(document).ready(function () {
             processData: false,
             success: function(response) {
                 showFlashMessage(response.message);
+                table.ajax.reload();
             },
             error: function(xhr) {
                 var errorMsg = 'An error occurred';
@@ -319,10 +320,6 @@ $(document).ready(function () {
             }
         });
     });
-
-
-
-
 
 
 

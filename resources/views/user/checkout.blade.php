@@ -67,8 +67,8 @@
                                 </select>
                             </div>
                             <div class="form-group mb-3" style="width: 50%; float: left; padding-right: 15px;">
-                                <label for="payment_method" style="font-weight: bold; color: #333;">Payment Method:</label>
-                                <select name="payment_method" id="payment_method" class="form-control" style="
+                                <label for="methodSelect" style="font-weight: bold; color: #333;">Payment Method:</label>
+                                <select id="methodSelect" class="form-control" style="
                                     border: 1px solid #ced4da;
                                     border-radius: 4px;
                                     box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.075);
@@ -77,9 +77,6 @@
                                     width: 100%;
                                     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
                                 ">
-                                    <option value="COD">Cash on Delivery</option>
-                                    <option value="E-Wallet">E-Wallet</option>
-                                    <option value="Online Banking">Online Banking</option>
                                 </select>
                             </div>
                             <div class="d-flex justify-content-end" style="clear: both;">

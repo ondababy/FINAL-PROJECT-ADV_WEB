@@ -28,6 +28,8 @@ Route::view('/', 'welcome')->name('welcome');
 Route::view('/about', 'about');
 Route::view('/contact', 'contact');
 
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+
 // Route::middleware(['auth:sanctum', 'role:customer,admin'])->group(function () {
 //     Route::view('/profile', 'user.profile');
 //     Route::view('/shop', 'shop.index');
@@ -71,6 +73,7 @@ Route::post('/product/{id}/review', [ReviewController::class, 'store'])->name('r
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::view('/products', 'admin.product');
+    Route::view('/crud', 'admin.crud');
     Route::view('/brands', 'admin.brand');
     Route::view('/suppliers', 'admin.supplier');
     Route::view('/couriers', 'admin.courier');
@@ -80,4 +83,18 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::view('/orders', 'admin.order')->name('admin.orders');
     Route::view('/admin-dashboard', 'admin.dashboard')->name('admin.dashboard');
     Route::view('/charts', 'admin.chart')->name('admin.charts');
+    Route::view('/payment/method', 'admin.payment');
+});
+
+Route::post('/multiplesheets/import', [AdminController::class, 'importMultipleSheet']);
+
+Route::get('/test-meilisearch', function () {
+    $client = app(MeiliClient::class);
+
+    try {
+        $indexes = $client->getIndexes();
+        return response()->json(['message' => 'Meilisearch client created successfully!', 'indexes' => $indexes]);
+    } catch (Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
 });

@@ -247,6 +247,7 @@ $(document).ready(function () {
                 $('.totalAmount').text(`₱${data.totalAmount}`);
                 displayCustomerDetails(data.customer);
                 populateCouriers(data.couriers);
+                populateMethods(data.payment_methods);
             },
             error: function(xhr, status, error) {
                 console.error('Error fetching cart data:', error);
@@ -332,8 +333,19 @@ $(document).ready(function () {
         });
     }
 
-    checkout();
+    function populateMethods(payment_methods) {
+        const $methodSelect = $('#methodSelect');
+        $methodSelect.empty();
+        payment_methods.forEach(function(payment_method) {
+            $methodSelect.append(`
+                <option value="${payment_method.id}">${payment_method.payment_method}</option>
+            `);
+        });
+    }
 
+
+    checkout();
+    
     $('#placeOrder').click(function () {
         var items = [];
         $('#customerCheckout .cart-item').each(function () {
@@ -346,7 +358,7 @@ $(document).ready(function () {
         });
 
         const courierId = $('#courierSelect').val();
-        const paymentMethod = $('#payment_method').val();
+        const paymentMethodId = $('#methodSelect').val();
 
         $.ajax({
             type: "POST",
@@ -354,7 +366,7 @@ $(document).ready(function () {
             data: JSON.stringify({
                 items: items,
                 courier_id: courierId,
-                payment_method: paymentMethod
+                payment_method_id: paymentMethodId
             }),
             contentType: "application/json",
             success: function (response) {

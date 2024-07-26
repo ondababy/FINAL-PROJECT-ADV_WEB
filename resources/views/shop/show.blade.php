@@ -120,6 +120,7 @@
             </div>
         </div>
     </div>
+    @endforeach
 </div>
 
 <div class="modal fade" id="addReviewModal" tabindex="-1" role="dialog" aria-labelledby="addReviewModalLabel" aria-hidden="true">

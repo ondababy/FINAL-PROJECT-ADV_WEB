@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Payment;
 use App\Models\Product;
 use App\Models\Stock;
+use App\Models\PaymentMethod;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Facades\Log;
@@ -59,6 +60,7 @@ class ShopController extends Controller
         $updatedCartItem = $customer->products()->where('product_id', $product_id)->first();
         return response()->json(['message' => 'Product added to cart!', 'cartItem' => $updatedCartItem]);
     }
+
     public function getCarts()
     {
         $userId = Auth::id();
@@ -247,6 +249,8 @@ class ShopController extends Controller
             $shippingFee = 50; // Replace with your logic to fetch or calculate the shipping fee
 
             $couriers = DB::table('couriers')->get();
+            $payment_methods = DB::table('payment_methods')->get();
+
             $user = $customer->user;
             $customerDetails = $user ? [
                 'name' => $user->name,
@@ -263,6 +267,7 @@ class ShopController extends Controller
             return response()->json([
                 'carts' => $carts,
                 'couriers' => $couriers,
+                'payment_methods' => $payment_methods,
                 'cartTotal' => $cartTotal,
                 'shippingFee' => $shippingFee,
                 'totalAmount' => $cartTotal + $shippingFee,
@@ -287,7 +292,7 @@ class ShopController extends Controller
 
         $this->validate($request, [
             'courier_id' => 'required|integer',
-            'payment_method' => 'required|string',
+            'payment_method_id' => 'required|integer',
             'items' => 'required|array',
             'items.*.id' => 'required|integer|exists:products,id',
             'items.*.quantity' => 'required|integer|min:1'
@@ -298,7 +303,11 @@ class ShopController extends Controller
 
             $order = $this->createOrder($customerId, $request->courier_id);
             $this->processOrderItems($order, $request->input('items'));
-            $this->createPayment($order->id, $request->input('payment_method'));
+            // $this->createPayment($order->id, $request->payment_method_id);
+
+            Log::info('Payment Method ID:', ['payment_method_id' => $request->payment_method_id]);
+
+            $this->createPayment($order->id, $request->payment_method_id);
 
             $user->customer->products()->detach();
 
@@ -360,10 +369,10 @@ class ShopController extends Controller
         }
     }
 
-    private function createPayment($orderId, $paymentMethod) {
+    private function createPayment($orderId, $paymentMethodId) {
         Payment::create([
             'order_id' => $orderId,
-            'mode_of_payment' => $paymentMethod,
+            'payment_method_id' => $paymentMethodId,
             'date_of_payment' => now(),
         ]);
     }

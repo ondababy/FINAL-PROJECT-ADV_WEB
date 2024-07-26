@@ -176,8 +176,7 @@ $(document).ready(function () {
                 success: function (data) {
                     console.log(data);
                     $("#productModal").modal("hide");
-                    var $prodtable = $('#productTable').DataTable();
-                    $prodtable.ajax.reload();
+                    table.ajax.reload();
                     showFlashMessage("Product added successfully!", "success");
                 },
                 error: function (error) {
@@ -232,9 +231,9 @@ $(document).ready(function () {
                     processData: false,
                     contentType: false,
                     success: function (data) {
-                        console.log(data);
+                        // console.log(data);
                         $('#productModal').modal("hide");
-                        $('#productTable').DataTable().ajax.reload();
+                        table.ajax.reload();
                         showFlashMessage("Product updated successfully!", "success");
                     },
                     error: function (error) {
@@ -339,6 +338,7 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             success: function(response) {
+                table.ajax.reload();
                 showFlashMessage(response.message);
             },
             error: function(xhr) {

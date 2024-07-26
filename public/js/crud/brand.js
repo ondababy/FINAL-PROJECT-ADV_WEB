@@ -19,7 +19,7 @@ $(document).ready(function () {
             flashMessage.fadeOut();
         }, 5000);
     }
-
+    
     var table = $('#brandtable').DataTable({
         ajax: {
             url: "/api/brands",
@@ -140,8 +140,7 @@ $(document).ready(function () {
                 success: function (data) {
                     console.log(data);
                     $("#brandModal").modal("hide");
-                    var $prodtable = $('#brandtable').DataTable();
-                    $prodtable.ajax.reload();
+                    $('#brandtable').DataTable().ajax.reload();
                     showFlashMessage("Brand added successfully!", "success");
                 },
                 error: function (error) {
@@ -307,6 +306,7 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             success: function(response) {
+                $('#brandtable').DataTable().ajax.reload();
                 showFlashMessage(response.message);
             },
             error: function(xhr) {

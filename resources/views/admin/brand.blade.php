@@ -19,7 +19,7 @@
                 <div class="input-group-custom">
                     <form id="import-form-brand" enctype="multipart/form-data">
                         <input type="file" name="importFile" id="importFile" />
-                        <button type="submit" id="import-button" class="btn btn-primary">Import Brands</button>
+                        <button type="submit" id="import-button" class="btn btn-primary"style="float: right;">Import Brands</button>
                     </form>
                 </div>
 

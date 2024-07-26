@@ -19,7 +19,6 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        // $items = Item::with('stock')->get();
         $suppliers = Supplier::orderBy('id', 'DESC')->get();
         return response()->json($suppliers);
     }

@@ -130,9 +130,9 @@ class CourierController extends Controller
 
         try {
             Excel::import(new CouriersImport, $request->file('importFile'));
-            return response()->json(['message' => 'Suppliers imported successfully'], 200);
+            return response()->json(['message' => 'Couriers imported successfully'], 200);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to import suppliers', 'details' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Failed to import couriers', 'details' => $e->getMessage()], 500);
         }
     }
 
