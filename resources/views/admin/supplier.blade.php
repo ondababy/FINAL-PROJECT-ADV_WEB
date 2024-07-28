@@ -9,12 +9,26 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12 position-relative">
                 <div class="card mt-3 mb-3">
+                    <button id="refreshButton" class="btn" style="
+                    background-color: #007bff;
+                    color: white;
+                    border: none;
+                    border-radius: 50px;
+                    padding: 10px 20px;
+                    font-size: 14px;
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    transition: background-color 0.3s, box-shadow 0.3s;
+                ">
+                    <i class="fa fa-refresh" style="margin-right: 5px;"></i> Refresh
+                </button>
                     <div class="card-body">
                         @include('layouts.flash-messages')
                     </div>
-
                     <div class="input-group-custom">
                         <form id="import-form-supplier" enctype="multipart/form-data">
                             <input type="file" name="importFile" id="importFile" />
@@ -40,7 +54,7 @@
             <div class="card mt-3 mb-3 ml-3 mr-3">
                 <div class="card-body mt-1 mb-1 ml-1 mr-1">
                     <div class="card-header mt-2 ml-5 mb-2 mr-5 text-center" style="background-color: lightskyblue; border:2px solid black;" >
-                    <h4 class="modal-title">Create supplier</h4>
+                    <h4 class="modal-title">SUPPLIER</h4>
                 </div>
                 </div>
                 <div class="card-body">

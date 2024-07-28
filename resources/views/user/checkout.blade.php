@@ -1,31 +1,44 @@
 @extends('layouts.master')
 @section('content')
-<div class="container-fluid mt-3">
+<div class="container-fluid" style="border: 2px solid black; width: 100%; max-width: 2000px;">
     <div class="row">
-        <div class="col-lg-3 mt-3">
+        {{-- <div class="col-lg-3 mt-3">
             <div class="card fixed-sidebar" style="border: 2px solid black;">
                 <div class="card-body">
+                    @include('partials.sidebar')
+                </div>
+            </div>
+        </div> --}}
+        <div class="col-lg-3" style="padding-left: 0;">
+            <div class="card fixed-sidebar" style="border: 2px solid black; top: 0; bottom:0; height: 100vh; overflow-y: auto; width: 100%;">
+                <div class="card-body"style="overflow: hidden; overflow-y: scroll; -ms-overflow-style: none; scrollbar-width: none;">
                     @include('partials.sidebar')
                 </div>
             </div>
         </div>
         <div class="col-md-9">
             <div class="row">
-                <!-- Customer Details Card -->
-                <div class="col-12 mb-3">
+                <div class="col-12 mb-3 mt-2">
                     <div class="card" style="border: 2px solid lightblue;">
                         <div class="card-header mt-3 ml-5 mr-5 text-center" style="background-color: lightskyblue; border:2px solid black;">
                             <h5><img src="{{ asset('photo/logo.png') }}" alt="Shoessshable" class="title-image" style="width:45px; height:45px;"/>
                                 <strong>SHOESSSHABLE</strong> | Checkout</h5>
                         </div>
-                        <div class="card-body" id="customerDetails">
+                        <div class="d-flex justify-content-center align-items-center" style="height: 50vh;">
+                            <div class="card">
+                                <div class="card-body text-center" id="customerDetails">
+                                    <!-- Your content here -->
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <!-- Cart Items Card -->
                 <div class="col-12 mb-3">
                     <div class="card">
                         <div class="card-body"style="border: 2px solid lightblue;">
+                            <div class="card-header text-center mt-1 mb-2 ml-2 mr-2" style="border: 1px solid black; background-color:aliceblue">
+                                <h2>PRODUCTS</h2>
+                            </div>
                             <table class="table table-hover">
                                 <thead style="background-color: white; color: black; border: 3px solid lightblue; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);">
                                     <tr>
@@ -41,16 +54,15 @@
                         </div>
                     </div>
                 </div>
-                <!-- Summary and Checkout Card -->
                 <div class="col-12 mb-3">
                     <div class="card" style="border: 2px solid lightblue;">
-                        <div class="card-header text-center">
+                        <div class="card-header text-center mt-2 mb-2 ml-2 mr-2" style="border: 1px solid black; background-color:aliceblue">
                             <h2>Order Summary</h2>
                         </div>
                         <div class="card-body">
                             <p>Order Total: <strong class="orderTotal">₱0</strong></p>
                             <p>Shipping Fee: <strong class="shippingFee">₱0</strong></p>
-                            <p style="font-size: 1.5em; font-weight: bold; color: #000; background-color: #f0f0f0; padding: 10px; border-radius: 5px;">
+                            <p style="font-size: 1.5em; font-weight: bold; color: #000; background-color: aliceblue; padding: 10px; border-radius: 5px;">
                                 Total Amount: <strong class="totalAmount">₱0</strong>
                             </p>
                             <div class="mb-3" style="width: 50%; float: left; padding-right: 15px;">

@@ -4,6 +4,7 @@
 <head>
     <title>SHOESSSHABLE</title>
     <meta charset="utf-8">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="api-token" content="{{ session('api-token') }}">
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
@@ -35,6 +36,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
     <!-- Bootbox.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Your custom JavaScript files -->
 
     <script src="{{ asset('js/crud/product.js') }}"></script>

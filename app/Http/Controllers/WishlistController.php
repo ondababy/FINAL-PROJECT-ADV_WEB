@@ -51,7 +51,7 @@ class WishlistController extends Controller
 
         if ($exists) {
             return response()->json([
-                'status' => 'error',
+                'status' => 'warning',
                 'message' => 'Product already in wishlist!',
             ], 409);
         }

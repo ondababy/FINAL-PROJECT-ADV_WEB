@@ -7,11 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Storage;
 
-// Import Excel
-use App\Imports\BrandsImport;
-use Maatwebsite\Excel\Facades\Excel;
-
-
 class BrandController extends Controller
 {
     /**
@@ -125,19 +120,5 @@ class BrandController extends Controller
         $brands = Brand::onlyTrashed()->get();
         \Log::info('Deleted Brands:', $brands->toArray()); // Log data for debugging
         return response()->json($brands);
-    }
-
-    public function import(Request $request)
-    {
-        $request->validate([
-            'importFile' => ['required', 'file', 'mimes:xlsx,xls']
-        ]);
-
-        try {
-            Excel::import(new BrandsImport, $request->file('importFile'));
-            return response()->json(['message' => 'Brands imported successfully'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to import brands', 'details' => $e->getMessage()], 500);
-        }
     }
 }

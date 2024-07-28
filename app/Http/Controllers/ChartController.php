@@ -8,7 +8,7 @@ use App\Models\Product;
 
 class ChartController extends Controller
 {
-    public function index()
+    public function charts()
     {
         return view('admin.dashboard');
     }

@@ -1,6 +1,36 @@
-/* Login and Registration Design */
+.search-bar {
+    display: flex;
+    align-items: center;
+    border: 2px solid #87CEFA; /* Light blue border */
+    border-radius: 25px;
+    padding: 5px 10px;
+    background-color: #E0E0E0;
+    width: 40%;
+    max-width: 400px;
+}
 
-/* Modal Styles */
+.search-bar .form-control {
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    flex: 1;
+    color: #757575;
+}
+
+.search-bar .clear-btn {
+    background-color: black;
+    border: none;
+    color: white;
+    padding: 0 10px;
+    border-radius: 50%;
+    margin-left: -30px;
+    cursor: pointer;
+}
+
+.search-bar .clear-btn i {
+    font-size: 1rem;
+}
+
 .modal-content {
     background-color: #ADD8E6; /* Light Blue */
     color: #001f3f; /* Dark Blue */
@@ -120,6 +150,7 @@ body {
 #templatemo_nav_top {
     padding: 0.5rem 0;
     background-color: lightblue !important;
+    border: none;
 }
 
 #templatemo_nav_top .navbar-sm-brand {
@@ -133,10 +164,9 @@ body {
 }
 
 .navbar {
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
-    background-color: white;
+    background-color:aliceblue;
     border-bottom: 1px solid black;
+    border: none;
 }
 
 .navbar-nav {
@@ -158,12 +188,13 @@ body {
 
 /* Increase the margin between Login and Contact */
 .navbar-nav .nav-item.login + .nav-item.contact {
-    margin-left: 40px; /* Increase the margin between Login and Contact */
+    justify-content: flex-end;
+    margin-left: 20px;
 }
 
 /* Adjust padding and font weight for nav links */
 .navbar-nav .nav-item .nav-link {
-    padding: 0 1.5rem; /* Adjust spacing between links */
+    /* padding: 0 1.5rem;  */
     font-weight: bold;
 }
 

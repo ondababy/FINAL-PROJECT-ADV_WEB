@@ -7,7 +7,42 @@ $(document).ready(function () {
             'X-CSRF-TOKEN': csrfToken
         }
     });
-    
+
+    function showAlert(message, type) {
+        const alertTypeClass = {
+            success: 'custom-bootbox-success',
+            error: 'custom-bootbox-error',
+            warning: 'custom-bootbox-warning'
+        };
+
+        const alertIcon = {
+            success: '<i class="fas fa-check-circle"></i>',
+            error: '<i class="fas fa-exclamation-circle"></i>',
+            warning: '<i class="fas fa-exclamation-triangle"></i>'
+        };
+
+        const dialog = bootbox.dialog({
+            message: `<div class="custom-bootbox-content ${alertTypeClass[type]}">
+                        ${alertIcon[type]} <span>${message}</span>
+                      </div>`,
+            backdrop: true,
+            closeButton: false,
+            onShown: function () {
+                setTimeout(function() {
+                    dialog.modal('hide');
+                }, 2000);
+            }
+        });
+
+        dialog.on('shown.bs.modal', function() {
+            setTimeout(function() {
+                dialog.find('.custom-bootbox-content').fadeOut(2000, function() {
+                    dialog.modal('hide');
+                });
+            }, 2000);
+        });
+    }
+
     $('#products').on('click', '.wishlist', function (e) {
         e.stopPropagation();
         const productId = $(this).data('product-id');
@@ -25,19 +60,19 @@ $(document).ready(function () {
             success: function(response) {
                 if (response.status === 'success') {
                     $(buttonElement).html('<i class="fas fa-heart text-danger"></i>');
-                    showAlert('Product added to wishlist!');
-                } else if (response.status === 'error' && response.message === 'Product already in wishlist!') {
-                    showAlert(response.message);
+                    showAlert('Product added to wishlist!', 'success');
+                } else if (response.status === 'warning' && response.message === 'Product already in wishlist!') {
+                    showAlert(response.message, 'warning');
                 } else {
-                    showAlert('An error occurred: ' + response.message);
+                    showAlert('An error occurred: ' + response.message, 'error');
                 }
             },
             error: function(xhr) {
                 console.error('Error adding to wishlist:', xhr);
                 if (xhr.status === 409) {
-                    showAlert('Product already in wishlist!');
+                    showAlert('Product already in wishlist!', 'error');
                 } else {
-                    showAlert('An error occurred while adding the product to the wishlist.');
+                    showAlert('An error occurred while adding the product to the wishlist.', 'error');
                 }
             }
         });
@@ -73,7 +108,7 @@ $(document).ready(function () {
                             const price = `₱${product.cost}`;
                             const stockStatus = product.quantity > 0 ? 'In Stock' : 'Out of Stock';
                             const actionHtml = product.quantity > 0
-                                ? `<i class="fas fa-cart-plus fa-2x add" data-product-id="${product.id}" style="cursor: pointer;"></i>`
+                                ? ` <button type="button" class="btn add" data-product-id="${product.id}" style="background-color: lightskyblue; font-weight: bold; border: 1px solid black; color: white;">Add to cart</button>`
                                 : '';
 
                             tableContent += `
@@ -127,11 +162,9 @@ $(document).ready(function () {
         });
     }
 
-
     $(document).ready(function() {
         loadWishlist();
     });
-
 
     function removeWishlistItem(productId) {
         $.ajax({
@@ -139,7 +172,7 @@ $(document).ready(function () {
             method: 'DELETE',
             success: function(data) {
                 if (data.status === 'success') {
-                    showAlert('Item successfully removed from wishlist!');
+                    showAlert('Item successfully removed from wishlist!', 'success');
                     loadWishlist();
                 } else {
                     console.error('Error removing item:', data.message);

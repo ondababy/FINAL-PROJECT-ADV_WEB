@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Shoessshable</title>
+    <title>SHOESSSHABLE</title>
     <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1">

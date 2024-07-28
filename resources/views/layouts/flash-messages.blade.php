@@ -32,7 +32,6 @@
 	<button type="button" class="close" data-dismiss="alert">×</button>
 	@foreach ($errors->all() as $message)
 		{{$message}}
-
 	@endforeach
 </div>
 @endif

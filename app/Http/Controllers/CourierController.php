@@ -7,11 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Storage;
 
-// Import Excel
-use App\Imports\CouriersImport;
-use Maatwebsite\Excel\Facades\Excel;
-
-
 class CourierController extends Controller
 {
     /**
@@ -21,14 +16,6 @@ class CourierController extends Controller
     {
         $couriers = Courier::orderBy('id', 'DESC')->get();
         return response()->json($couriers);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -65,15 +52,6 @@ class CourierController extends Controller
         $courier = Courier::where('id', $id)->first();
         return response()->json($courier);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      */
@@ -120,20 +98,6 @@ class CourierController extends Controller
         }
         $data = array('error' => 'Courier not deleted', 'code' => 400);
         return response()->json($data);
-    }
-
-    public function import(Request $request)
-    {
-        $request->validate([
-            'importFile' => ['required', 'file', 'mimes:xlsx,xls']
-        ]);
-
-        try {
-            Excel::import(new CouriersImport, $request->file('importFile'));
-            return response()->json(['message' => 'Couriers imported successfully'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to import couriers', 'details' => $e->getMessage()], 500);
-        }
     }
 
     public function restoreCourier($id)

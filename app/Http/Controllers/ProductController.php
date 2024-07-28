@@ -9,10 +9,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use App\Models\Stock;
 
-//Excel Import
-use App\Imports\ProductsImport;
-use Maatwebsite\Excel\Facades\Excel;
-
 class ProductController extends Controller
 {
     public function index()
@@ -181,30 +177,4 @@ class ProductController extends Controller
             'products' => $deletedProducts
         ]);
     }
-
-
-    public function import(Request $request)
-    {
-        $request->validate([
-            'importFile' => ['required', 'file', 'mimes:xlsx,xls']
-        ]);
-
-        try {
-            Excel::import(new ProductsImport, $request->file('importFile'));
-            return response()->json(['message' => 'Products imported successfully'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to import products', 'details' => $e->getMessage()], 500);
-        }
-    }
-
-    // public function search(Request $request)
-    // {
-    //     $query = $request->input('search');
-    //     $products = Product::where('name', 'LIKE', "%{$query}%")
-    //         ->orWhere('description', 'LIKE', "%{$query}%")
-    //         ->get();
-
-    //     return response()->json($products);
-    // }
-
 }

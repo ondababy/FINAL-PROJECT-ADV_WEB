@@ -1,6 +1,7 @@
 $(document).ready(function() {
+
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
-    console.log('CSRF Token:', csrfToken);
+    // console.log('CSRF Token:', csrfToken);
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': csrfToken
@@ -8,15 +9,16 @@ $(document).ready(function() {
     });
     function showFlashMessage(message, type) {
         var flashMessage = $('#flash-message');
-        flashMessage.html(message); // Set the message content
-        flashMessage.removeClass().addClass('alert'); // Remove any previous classes
-        flashMessage.addClass('alert-' + type); // Add Bootstrap alert class
-        flashMessage.addClass('show'); // Add 'show' class to display it
-        flashMessage.fadeIn().delay(3000).fadeOut(); // Fade in and out after delay
+        flashMessage.html(message);
+        flashMessage.removeClass().addClass('alert');
+        flashMessage.addClass('alert-' + type);
+        flashMessage.addClass('show');
+        flashMessage.fadeIn().delay(3000).fadeOut();
     }
 
     // DataTable initialization
     var table = $('#stockTable').DataTable({
+        "lengthChange": false,
         ajax: {
             url: `/api/stocks`, // Replace with your actual URL
             type: "GET",
@@ -33,11 +35,7 @@ $(document).ready(function() {
                 });
             }
         },
-        dom: 'Bfrtip',
-        buttons: [
-            'pdf',
-            'excel'
-        ],
+        // dom: 'Bfrtip',
         columns: [
             { data: 'product_id', title: 'ID' },
             { data: 'product_name', title: 'Product Name' },

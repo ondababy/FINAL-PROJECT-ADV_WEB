@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Shoessshable</title>
+    <title>SHOESSSHABLE</title>
     <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
     <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -88,7 +88,7 @@
                             <h3 class="h2">Aliquip ex ea commodo consequat</h3>
                             <p>
                                 Buy shoes you like here at Shoessshable
-                                You are <strong>welcome to buy</strong> shoes that you like 
+                                You are <strong>welcome to buy</strong> shoes that you like
                             </p>
                         </div>
                     </div>

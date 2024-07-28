@@ -1,4 +1,5 @@
-<nav id="mySidebar" class="sidebar" style="font-family:monospace">
+<link rel="stylesheet" href="{{ asset('css/shop.css') }}">
+<nav id="fixed-sidebar" class="sidebar" >
     <header>
         <div class="image-text text-center">
             <span class="image">
@@ -15,11 +16,11 @@
                 <li class="nav-link">
                     <a href="/profile" class="nav-link-item">
                         <i class='bx bx-user icon'></i>
-                        <span class="text nav-text">Profile</span>
+                        <span class="text nav-text">Account</span>
                     </a>
                 </li>
                 <li class="nav-link">
-                    <a href="/shop" class="nav-link-item">
+                    <a href="/shop" class="nav-link-item" style="font-size: 16px;">
                         <i class='bx bx-store icon'></i>
                         <span class="text nav-text">Shop</span>
                     </a>
@@ -31,9 +32,9 @@
                     </a>
                 </li>
                 <li class="nav-link">
-                    <a href="/myorder" class="nav-link-item">
+                    <a href="/user/purchase" class="nav-link-item">
                         <i class='bx bx-receipt icon'></i>
-                        <span class="text nav-text">Orders</span>
+                        <span class="text nav-text">My Purchase</span>
                     </a>
                 </li>
                 <li class="nav-link">

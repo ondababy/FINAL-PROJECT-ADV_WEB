@@ -1,4 +1,49 @@
 $(document).ready(function () {
+
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    console.log('CSRF Token:', csrfToken);
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': csrfToken
+        }
+    });
+
+    function showFlashMessage(message, type) {
+        var flashMessage = $('#flash-message');
+        flashMessage.removeClass();
+        flashMessage.addClass('alert alert-' + type);
+        flashMessage.html(message);
+        flashMessage.fadeIn();
+
+        setTimeout(function() {
+            flashMessage.fadeOut();
+        }, 5000);
+    }
+
+    $('#multiple-importForm').on('submit', function (e) {
+        e.preventDefault();
+
+        let formData = new FormData(this);
+
+        $.ajax({
+            url: '/api/import-multiple-sheets',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                $('#adminProduct').DataTable().ajax.reload();
+                $('#adminSupplier').DataTable().ajax.reload();
+                $('#adminCourier').DataTable().ajax.reload();
+                $('#adminBrand').DataTable().ajax.reload();
+                showFlashMessage(response.message);
+            },
+            error: function (response) {
+                showFlashMessage('Error impoting multiple sheets', 'danger');
+            }
+        });
+    });
+
         var csrfToken = $('meta[name="csrf-token"]').attr('content');
         console.log('CSRF Token:', csrfToken);
 
@@ -9,6 +54,7 @@ $(document).ready(function () {
         });
 
         $('#adminBrand').DataTable({
+        "lengthChange": false,
         ajax: {
             url: "/api/brands",
             dataSrc: ""
@@ -54,6 +100,7 @@ $(document).ready(function () {
     });
 
     $('#adminCourier').DataTable({
+        "lengthChange": false,
         ajax: {
             url: "/api/couriers",
             dataSrc: ""
@@ -106,6 +153,7 @@ $(document).ready(function () {
         });
 
         $('#adminProduct').DataTable({
+            "lengthChange": false,
             ajax: {
                 url: "/api/products",
                 dataSrc: "products"
@@ -116,7 +164,7 @@ $(document).ready(function () {
                     data: 'img_path',title: 'Product Image',
                     render: function (data, type, row) {
                         var imgPaths = data.split(',');
-                        var carouselId = `carousel_${row.id}`; // Unique ID for each carousel
+                        var carouselId = `carousel_${row.id}`;
                         var carouselHTML = `<div id="${carouselId}" class="carousel slide" data-ride="carousel">`;
                         carouselHTML += '<ol class="carousel-indicators">';
                         imgPaths.forEach(function (path, index) {
@@ -160,15 +208,16 @@ $(document).ready(function () {
                 { data: 'description', title: 'Description' },
                 { data: 'cost', title: 'Cost' },
                 {
-                    data: 'stocks.quantity',title: 'Stocks', // Adjust the data attribute
+                    data: 'stocks.quantity',title: 'Stocks',
                     render: function(data, type, row) {
-                        return data ? data : '0'; // Fallback to 0 if quantity is null or undefined
+                        return data ? data : '0';
                     }
                 },
             ]
         });
 
         $('#adminSupplier').DataTable({
+            "lengthChange": false,
             ajax: {
                 url: "/api/suppliers",
                 dataSrc: ""

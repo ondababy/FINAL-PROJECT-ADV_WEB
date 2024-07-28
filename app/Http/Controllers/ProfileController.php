@@ -110,57 +110,67 @@ class ProfileController extends Controller
         return response()->json(['message' => 'Profile updated successfully'], 200);
     }
 
-    public function changePassword(Request $request)
-    {
-        $validatedData = $request->validate([
-            'current_password' => 'required|string|min:8',
-            'new_password' => 'required|string|min:8|confirmed',
-        ]);
+    // public function update(Request $request)
+    // {
+    //     $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'password' => 'nullable|string|min:8|confirmed',
+    //         'image' => 'nullable|image|max:2048',
+    //     ]);
 
-        $user = Auth::user();
-        if (!Hash::check($validatedData['current_password'], $user->password)) {
-            return response()->json(['message' => 'Current password does not match'], 401);
-        }
-        $user->password = Hash::make($validatedData['new_password']);
-        $user->save();
+    //     $user = Auth::user();
+    //     $user->name = $request->input('name');
+    //     if ($request->has('password')) {
+    //         $user->password = Hash::make($request->input('password'));
+    //     }
+    //     if ($request->hasFile('image')) {
+    //         $image = $request->file('image');
+    //         $path = $image->store('public/images');
+    //         $user->image = str_replace('public/', 'storage/', $path);
+    //     }
 
-        return response()->json(['message' => 'Password changed successfully'], 200);
-    }
-
-    public function deactivateAccount(Request $request)
-    {
-        $user = Auth::user();
-        $user->status = 'inactive';
-        $user->save();
-
-        Auth::logout();
-        $request->session()->forget('api-token');
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return response()->json(['message' => 'Account deactivated successfully']);
-    }
-
-
+    //     if ($user->customer) {
+    //         $customer = $user->customer;
+    //         $customer->username = $request->input('username');
+    //         $customer->address = $request->input('address');
+    //         $customer->contact_number = $request->input('contact_number');
+    //         $customer->save();
+    //     }
+    //     $user->save();
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Profile updated successfully',
+    //         'token' => $user->createToken("API TOKEN")->plainTextToken
+    //     ]);
+    // }
     public function update(Request $request)
     {
+        // Validate input
         $request->validate([
             'name' => 'required|string|max:255',
             'password' => 'nullable|string|min:8|confirmed',
             'image' => 'nullable|image|max:2048',
         ]);
 
+        // Get the authenticated user
         $user = Auth::user();
+
+        // Update user's name
         $user->name = $request->input('name');
-        if ($request->has('password')) {
+
+        // Check if a new password is provided and update it
+        if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));
         }
+
+        // Check if an image is uploaded and update it
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $path = $image->store('public/images');
             $user->image = str_replace('public/', 'storage/', $path);
         }
 
+        // Update customer's additional info
         if ($user->customer) {
             $customer = $user->customer;
             $customer->username = $request->input('username');
@@ -168,11 +178,29 @@ class ProfileController extends Controller
             $customer->contact_number = $request->input('contact_number');
             $customer->save();
         }
+
+        // Save the user
         $user->save();
+
+        // Return response
         return response()->json([
             'success' => true,
             'message' => 'Profile updated successfully',
             'token' => $user->createToken("API TOKEN")->plainTextToken
         ]);
+    }
+
+    public function deactivateAccount(Request $request)
+    {
+        $user = Auth::user();
+        if ($user) {
+            $user->status = 'inactive';
+            $user->save();
+            $user->tokens()->delete();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return response()->json(['message' => 'Account deactivated successfully']);
+        }
+        return response()->json(['message' => 'User not authenticated'], 401);
     }
 }

@@ -17,11 +17,22 @@ use Illuminate\Support\Facades\Auth;
 
 class ShopController extends Controller
 {
+    // public function index(Request $request)
+    // {
+    //     $products = Product::whereHas('stocks', function ($query) {
+    //         $query->where('quantity', '>', 0);
+    //     })->with('brand', 'stocks')->paginate(10);
+
+    //     return response()->json($products);
+    // }
+
     public function index(Request $request)
     {
         $products = Product::whereHas('stocks', function ($query) {
             $query->where('quantity', '>', 0);
-        })->with('brand', 'stocks')->paginate(10);
+        })->with(['brand' => function($query) {
+            $query->select('id', 'brand_name');
+        }, 'stocks'])->paginate(10);
 
         return response()->json($products);
     }

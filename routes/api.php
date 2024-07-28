@@ -10,7 +10,6 @@ use App\Http\Controllers\CourierController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\StockController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrderController;
@@ -18,8 +17,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\WishlistController;
-use App\Http\Controllers\ViewController;
 use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\ImportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,10 +35,8 @@ use App\Http\Controllers\PaymentMethodController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/logout', [AuthController::class, 'logout']);
-// Route::get('/search', [SearchController::class, 'search']);
 
-Route::get('/search', [SearchController::class, 'search']);
-Route::get('/autocomplete', [SearchController::class, 'autocomplete']);
+Route::get('/search', [ShopController::class, 'search']);
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     // API Resources
@@ -68,10 +65,11 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::post('/product/restore/{id}', [ProductController::class, 'restoreProduct']);
 
     # Imports
-    Route::post('/import-suppliers', [SupplierController::class, 'import']);
-    Route::post('/import-products', [ProductController::class, 'import']);
-    Route::post('/import-couriers', [CourierController::class, 'import']);
-    Route::post('/import-brands', [BrandController::class, 'import']);
+    Route::post('/import-suppliers', [ImportController::class, 'supplierImport']);
+    Route::post('/import-products', [ImportController::class, 'productImport']);
+    Route::post('/import-couriers', [ImportController::class, 'courierImport']);
+    Route::post('/import-brands', [ImportController::class, 'brandImport']);
+    Route::post('/import-multiple-sheets', [ImportController::class, 'importMultipleSheet']);
 
     # ACTIVATE | DEACTIVATE | CHANGE ROLE
     Route::put('/users/{user}/activate', [UserController::class, 'activate']);
@@ -109,11 +107,7 @@ Route::middleware(['auth:sanctum', 'role:admin,customer'])->group(function () {
     Route::post('/wishlist/add', [WishlistController::class, 'add']);
     Route::delete('/wishlist/remove/{id}', [WishlistController::class, 'remove']);
     Route::get('/wishlist', [WishlistController::class, 'index']);
-
-    // Route::get('/shop/search', [SearchController::class, 'search']);
 });
-
-
 
 
 

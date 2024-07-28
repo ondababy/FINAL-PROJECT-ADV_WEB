@@ -10,7 +10,7 @@ use Laravel\Scout\Searchable;
 class Product extends Model
 {
     use HasFactory, SoftDeletes;
-    use Searchable;
+    // use Searchable;
 
     protected $fillable = ['name', 'brand_id', 'supplier_id', 'description', 'cost', 'img_path'];
 
@@ -32,35 +32,27 @@ class Product extends Model
         return $this->belongsTo(Supplier::class);
     }
 
+    // public function orders() {
+    //     return $this->belongsToMany(Order::class, 'order_product', 'order_id', 'product_id')->withPivot('quantity');
+    // }
+
     public function orders() {
-        return $this->belongsToMany(Order::class, 'order_product', 'order_id', 'product_id')->withPivot('quantity');
+        return $this->belongsToMany(Order::class)->withPivot('quantity');
     }
+
+    // public function customers()
+    // {
+    //     return $this->belongsToMany(Customer::class, 'customer_product', 'customer_id', 'product_id')->withPivot('cart_qty');
+    // }
 
     public function customers()
     {
-        return $this->belongsToMany(Customer::class, 'customer_product', 'customer_id', 'product_id')->withPivot('cart_qty');
+        return $this->belongsToMany(Customer::class)->withPivot('cart_qty');
     }
 
     public function wishlists()
     {
         return $this->hasMany(Wishlist::class);
-    }
-
-    public function searchableAs(): string
-    {
-        return 'products_index';
-    }
-
-    public function toSearchableArray()
-    {
-        return [
-            'id' => $this->id,  // Ensure the ID is included if needed for search results
-            'name' => $this->name,
-            'description' => $this->description,
-            'brand_name' => $this->brand ? $this->brand->name : null,
-            'cost' => $this->cost,
-            // Include other fields as needed
-        ];
     }
 }
 

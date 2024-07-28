@@ -1,4 +1,13 @@
 $(document).ready(function () {
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    // console.log('CSRF Token:', csrfToken);
+
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': csrfToken
+        }
+    });
+
     function showFlashMessage(message, type) {
         var flashMessage = $('#flash-message');
         flashMessage.removeClass();
@@ -19,8 +28,6 @@ $(document).ready(function () {
         },
         dom: 'Bfrtip',
         buttons: [
-            // 'pdf',
-            // 'excel',
             {
                 text: 'Add Courier',
                 className: 'btn btn-primary btn-rounded btn-margin',
@@ -30,6 +37,13 @@ $(document).ready(function () {
                     $('#courierUpdate').hide();
                     $('#courierSubmit').show();
                     $('#courierImages').remove();
+                    $('#image').rules('add', {
+                        required: true,
+                        fileExtension: true,
+                        messages: {
+                            required: "Please upload an image",
+                        }
+                    });
                 }
             },
             {
@@ -49,13 +63,6 @@ $(document).ready(function () {
                     });
                 }
             },
-            {
-                text: 'Back',
-                className: 'btn btn-secondary btn-margin',
-                action: function (e, dt, node, config) {
-                    window.location.href = '/couriers';
-                }
-            }
         ],
         columns: [
             { data: 'id', title: 'ID' },
@@ -122,6 +129,10 @@ $(document).ready(function () {
         ],
     });
 
+    $('#refreshButton').on('click', function() {
+        table.ajax.reload();
+    });
+
     // Add Courier
     $("#courierSubmit").on('click', function (e) {
         e.preventDefault();
@@ -134,7 +145,6 @@ $(document).ready(function () {
                 data: formData,
                 contentType: false,
                 processData: false,
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                 dataType: "json",
                 success: function (data) {
                     console.log(data);
@@ -180,6 +190,7 @@ $(document).ready(function () {
                     }
                 });
                 $("#courierform").append("<div id='courierImages'>" + imagesHTML + "</div>");
+                $('#image').rules('remove', 'required');
             },
             error: function (error) {
                 console.log(error);
@@ -201,7 +212,6 @@ $(document).ready(function () {
                 data: formData,
                 contentType: false,
                 processData: false,
-                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                 dataType: "json",
                 success: function (data) {
                     console.log(data);
@@ -221,37 +231,42 @@ $(document).ready(function () {
         e.preventDefault();
         var id = $(this).data('id');
         var $row = $(this).closest('tr');
-        bootbox.confirm({
-            message: "Do you want to delete this Courier?",
-            buttons: {
-                confirm: {
-                    label: 'Yes',
-                    className: 'btn-success'
-                },
-                cancel: {
-                    label: 'No',
-                    className: 'btn-danger'
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    $.ajax({
-                        type: "DELETE",
-                        url: `/api/couriers/${id}`,
-                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                        dataType: "json",
-                        success: function (data) {
-                            console.log(data);
-                            $row.fadeOut(4000, function () {
-                                table.row($row).remove().draw();
-                            });
-                            showFlashMessage("Courier deleted successfully!", "success");
-                        },
-                        error: function (error) {
-                            console.log(error);
-                        }
-                    });
-                }
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "DELETE",
+                    url: `/api/couriers/${id}`,
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        $row.fadeOut(4000, function () {
+                            table.row($row).remove().draw();
+                        });
+                        Swal.fire(
+                            'Deleted!',
+                            'Courier has been deleted.',
+                            'success'
+                        );
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        Swal.fire(
+                            'Error!',
+                            'There was a problem deleting the courier.',
+                            'error'
+                        );
+                    }
+                });
             }
         });
     });
@@ -278,7 +293,6 @@ $(document).ready(function () {
                     $.ajax({
                         type: "POST",
                         url: `/api/courier/restore/${id}`,
-                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                         dataType: "json",
                         success: function (data) {
                             console.log(data);
@@ -304,7 +318,6 @@ $(document).ready(function () {
             url: '/api/import-couriers',
             method: 'POST',
             data: formData,
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             contentType: false,
             processData: false,
             success: function(response) {
@@ -352,7 +365,7 @@ $(document).ready(function () {
                 required: true
             },
             'uploads[]': {
-                required: true,
+                // required: true,
                 fileExtension: true // Apply the custom validation method for file extensions
             }
         },
@@ -373,7 +386,7 @@ $(document).ready(function () {
                 required: "Please enter a valid service area"
             },
             'uploads[]': {
-                required: "Please select an image file",
+                // required: "Please select an image file",
                 fileExtension: "Please upload files with jpg, jpeg, or png extensions only"
             }
         },

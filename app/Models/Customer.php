@@ -24,9 +24,14 @@ class Customer extends Model
         return $this->hasMany(Order::class);
     }
 
+    // public function products()
+    // {
+    //     return $this->belongsToMany(Product::class, 'customer_product', 'customer_id', 'product_id')->withPivot('cart_qty');
+    // }
+
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'customer_product', 'customer_id', 'product_id')->withPivot('cart_qty');
+        return $this->belongsToMany(Product::class)->withPivot('cart_qty');
     }
 
     public function wishlists()

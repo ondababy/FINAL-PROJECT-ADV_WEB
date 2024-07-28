@@ -1,24 +1,22 @@
 
 $(document).ready(function () {
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
-    console.log('CSRF Token:', csrfToken);
+    // console.log('CSRF Token:', csrfToken);
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': csrfToken
         }
     });
 
-    // Function to show flash messages
     function showFlashMessage(message, type) {
         var flashMessage = $('#flash-message');
-        flashMessage.html(message); // Set the message content
-        flashMessage.removeClass().addClass('alert'); // Remove any previous classes
-        flashMessage.addClass('alert-' + type); // Add Bootstrap alert class
-        flashMessage.addClass('show'); // Add 'show' class to display it
-        flashMessage.fadeIn().delay(3000).fadeOut(); // Fade in and out after delay
+        flashMessage.html(message);
+        flashMessage.removeClass().addClass('alert');
+        flashMessage.addClass('alert-' + type);
+        flashMessage.addClass('show');
+        flashMessage.fadeIn().delay(3000).fadeOut();
     }
 
-    // DataTable initialization
     var table = $('#suppliertable').DataTable({
         ajax: {
             url: "/api/suppliers",
@@ -32,17 +30,19 @@ $(document).ready(function () {
                 text: 'Add Supplier',
                 className: 'btn btn-primary btn-rounded btn-margin',
                 action: function (e, dt, node, config) {
-                    // Reset the form
                     $("#supplierform").trigger("reset");
-                    // Remove validation messages
                     $('.error-message').remove();
-                    // Show the modal
                     $('#supplierModal').modal('show');
-                    // Hide the update button and show the submit button
                     $('#supplierUpdate').hide();
                     $('#supplierSubmit').show();
-                    // Remove existing images display
                     $('#supplierImages').remove();
+                    $('#image').rules('add', {
+                        required: true,
+                        fileExtension: true,
+                        messages: {
+                            required: "Please upload an image",
+                        }
+                    });
                 }
             },
             {
@@ -62,13 +62,6 @@ $(document).ready(function () {
                     });
                 }
             },
-            {
-                text: 'Back',
-                className: 'btn btn-secondary btn-margin',
-                action: function (e, dt, node, config) {
-                    window.location.href = '/suppliers';
-                }
-            }
         ],
         columns: [
             { data: 'id', title: 'ID' },
@@ -126,6 +119,10 @@ $(document).ready(function () {
                 }
             }
         ],
+    });
+
+    $('#refreshButton').on('click', function() {
+        table.ajax.reload();
     });
 
     // Add Supplier Submit
@@ -189,10 +186,11 @@ $(document).ready(function () {
                             imagesHTML += `<img src="${path}" width='200px' height='200px'>`;
                         }
                     });
-                    $("#supplierImages").html(imagesHTML); // Show images
                 } else {
                     $('#supplierImages').html('<p>No images available</p>'); // Show message if no images
                 }
+                $("#supplierImages").html(imagesHTML);
+                $('#image').rules('remove', 'required');
             },
             error: function (error) {
                 console.log(error);
@@ -233,40 +231,45 @@ $(document).ready(function () {
     $('#suppliertable tbody').on('click', 'a.deleteBtn', function (e) {
         e.preventDefault();
         var id = $(this).data('id');
-        var $row = $(this).closest('tr');
-        bootbox.confirm({
-            message: "Do you want to delete this Supplier?",
-            buttons: {
-                confirm: {
-                    label: 'Yes',
-                    className: 'btn-success'
-                },
-                cancel: {
-                    label: 'No',
-                    className: 'btn-danger'
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    $.ajax({
-                        type: "DELETE",
-                        url: `/api/suppliers/${id}`,
-                        dataType: "json",
-                        success: function (data) {
-                            console.log(data);
-                            $row.fadeOut(4000, function () {
-                                table.row($row).remove().draw();
-                            });
-                            showFlashMessage("Supplier deleted successfully!", "success");
-                        },
-                        error: function (error) {
-                            console.log(error);
-                        }
-                    });
-                }
+        var table = $('#suppliertable').DataTable();
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to delete this supplier?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: 'DELETE',
+                    url: `/api/suppliers/${id}`,
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        table.ajax.reload();
+                        Swal.fire(
+                            'Deleted!',
+                            'Supplier has been deleted.',
+                            'success'
+                        );
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        Swal.fire(
+                            'Error!',
+                            'There was a problem deleting the supplier.',
+                            'error'
+                        );
+                    }
+                });
             }
         });
     });
+
 
     // Restore Supplier
     $('#suppliertable tbody').on('click', 'a.restoreBtn', function (e) {
@@ -314,7 +317,6 @@ $(document).ready(function () {
             url: '/api/import-suppliers',
             method: 'POST',
             data: formData,
-            //headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             contentType: false,
             processData: false,
             success: function(response) {
@@ -339,7 +341,6 @@ $(document).ready(function () {
         return this.optional(element) || /\.(jpg|jpeg|png)$/i.test(value);
     }, "Please select a valid file type (jpg, jpeg, png)");
 
-    // Initialize validation on the form
     $('#supplierform').validate({
         rules: {
             name: {
@@ -355,7 +356,7 @@ $(document).ready(function () {
                 digits: true
             },
             'uploads[]': {
-                required: true,
+                // required: true,
                 fileExtension: true
             }
         },
@@ -372,7 +373,7 @@ $(document).ready(function () {
                 digits: "Please enter only digits"
             },
             'uploads[]': {
-                required: "Please select an image file",
+                // required: "Please select an image file",
                 fileExtension: "Please upload files with jpg, jpeg, or png extensions only"
             }
         },

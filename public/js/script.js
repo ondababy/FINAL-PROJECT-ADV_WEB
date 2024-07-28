@@ -15,7 +15,6 @@ $(document).ready(function() {
         }, 2000);
     }
 
-    // Handle login form submission
     $('#loginForm').submit(function(event) {
         event.preventDefault();
         var formData = new FormData(this);

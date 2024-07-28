@@ -8,16 +8,37 @@ $(document).ready(function () {
     });
 
     function showAlert(message, type) {
-        bootbox.dialog({
-            message: `<div class="custom-bootbox-content">${message}</div>`,
+        const alertTypeClass = {
+            success: 'custom-bootbox-success',
+            error: 'custom-bootbox-error',
+            warning: 'custom-bootbox-warning'
+        };
+
+        const alertIcon = {
+            success: '<i class="fas fa-check-circle"></i>',
+            error: '<i class="fas fa-exclamation-circle"></i>',
+            warning: '<i class="fas fa-exclamation-triangle"></i>'
+        };
+
+        const dialog = bootbox.dialog({
+            message: `<div class="custom-bootbox-content ${alertTypeClass[type]}">
+                        ${alertIcon[type]} <span>${message}</span>
+                      </div>`,
             backdrop: true,
-            onShown: function (dialog) {
-                $(dialog).find('.modal-content').addClass('custom-bootbox');
-                $(dialog).find('.modal-footer').remove();
+            closeButton: false,
+            onShown: function () {
                 setTimeout(function() {
-                    $(dialog).modal('hide');
+                    dialog.modal('hide');
                 }, 2000);
             }
+        });
+
+        dialog.on('shown.bs.modal', function() {
+            setTimeout(function() {
+                dialog.find('.custom-bootbox-content').fadeOut(2000, function() {
+                    dialog.modal('hide');
+                });
+            }, 2000);
         });
     }
 
@@ -74,7 +95,7 @@ $(document).ready(function () {
         var stockQuantity = parseInt(item.find('.stockQuantity').text());
 
         if (quantity + 1 > stockQuantity) {
-            showAlert('Not enough stock available', 'danger');
+            showAlert('Not enough stock available', 'warning');
             return;
         }
 
@@ -98,7 +119,7 @@ $(document).ready(function () {
             error: function (xhr) {
                 var response = JSON.parse(xhr.responseText);
                 if (xhr.status === 400 && response.message === 'Not enough stock available') {
-                    showAlert('Not enough stock available', 'danger');
+                    showAlert('Not enough stock available', 'warning');
                 } else {
                     showAlert('Error updating cart.', 'danger');
                 }
@@ -207,7 +228,7 @@ $(document).ready(function () {
             $cartsBody.append(`
                 <tr class="cart-item" data-id="${cart.id}" data-price="${cart.cost}">
                     <td class="itemName" data-id="${cart.id}">
-                        <img src="${cart.img_path}" alt="${cart.name}" style="width: 65px; height: 65px; object-fit: cover;"/>
+                        <img src="${cart.img_path}" alt="${cart.name}" style="width: 65px; height: 65px; object-fit: contain;"/>
                         ${cart.name}
                     </td>
                     <td class="quantity">
@@ -345,7 +366,7 @@ $(document).ready(function () {
 
 
     checkout();
-    
+
     $('#placeOrder').click(function () {
         var items = [];
         $('#customerCheckout .cart-item').each(function () {

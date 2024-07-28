@@ -1,13 +1,13 @@
 $(document).ready(function () {
     var csrfToken = $('meta[name="csrf-token"]').attr('content');
-    console.log('CSRF Token:', csrfToken);
+    // console.log('CSRF Token:', csrfToken);
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': csrfToken
         }
     });
 
-    // Function to show flash messages
     function showFlashMessage(message, type) {
         var flashMessage = $('#flash-message');
         flashMessage.removeClass();
@@ -19,7 +19,7 @@ $(document).ready(function () {
             flashMessage.fadeOut();
         }, 5000);
     }
-    
+
     var table = $('#brandtable').DataTable({
         ajax: {
             url: "/api/brands",
@@ -27,8 +27,6 @@ $(document).ready(function () {
         },
         dom: 'Bfrtip',
         buttons: [
-            // 'pdf',
-            // 'excel',
             {
                 text: 'Add Brand',
                 className: 'btn btn-primary btn-rounded btn-margin',
@@ -38,6 +36,13 @@ $(document).ready(function () {
                     $('#brandUpdate').hide();
                     $('#brandSubmit').show();
                     $('#brandImages').remove();
+                    $('#image').rules('add', {
+                        required: true,
+                        fileExtension: true,
+                        messages: {
+                            required: "Please upload an image",
+                        }
+                    });
                 }
             },
             {
@@ -57,13 +62,6 @@ $(document).ready(function () {
                     });
                 }
             },
-            {
-                text: 'Back',
-                className: 'btn btn-secondary btn-margin',
-                action: function (e, dt, node, config) {
-                    window.location.href = '/brands';
-                }
-            }
         ],
         columns: [
             { data: 'id', title: 'ID' },
@@ -123,6 +121,11 @@ $(document).ready(function () {
         ],
     });
 
+    $('#refreshButton').on('click', function() {
+        table.ajax.reload();
+    });
+
+
     // Add Brand
     $("#brandSubmit").on('click', function (e) {
         e.preventDefault();
@@ -166,7 +169,6 @@ $(document).ready(function () {
         $.ajax({
             type: "GET",
             url: `/api/brands/${id}`,
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             dataType: "json",
             success: function (data) {
                 $('#brand_id').val(data.brand_name);
@@ -179,6 +181,7 @@ $(document).ready(function () {
                     }
                 });
                 $("#brandform").append("<div id='brandImages'>" + imagesHTML + "</div>");
+                $('#image').rules('remove', 'required');
             },
             error: function (error) {
                 console.log(error);
@@ -220,40 +223,42 @@ $(document).ready(function () {
         e.preventDefault();
         var id = $(this).data('id');
         var $row = $(this).closest('tr');
-        bootbox.confirm({
-            message: "Do you want to delete this brand?",
-            buttons: {
-                confirm: {
-                    label: 'Yes',
-                    className: 'btn-success'
-                },
-                cancel: {
-                    label: 'No',
-                    className: 'btn-danger'
-                }
-            },
-            callback: function (result) {
-                if (result) {
-                    $.ajax({
-                        type: "DELETE",
-                        url: `/api/brands/${id}`,
-                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                        dataType: "json",
-                        success: function (data) {
-                            console.log(data);
-                            $row.fadeOut(2000, function () {
-                                table.row($row).remove().draw();
-                            });
-                            showFlashMessage("Brand deleted successfully!", "success");
-                        },
-                        error: function (error) {
-                            console.log(error);
-                        }
-                    });
-                }
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "DELETE",
+                    url: `/api/brands/${id}`,
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        $row.fadeOut(2000, function () {
+                            table.row($row).remove().draw();
+                        });
+                        Swal.fire(
+                            'Deleted!',
+                            'Brand has been deleted.',
+                            'success'
+                        );
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
             }
         });
     });
+
 
     // Restore Brand
     $('#brandtable tbody').on('click', 'a.restoreBtn', function (e) {
@@ -302,7 +307,6 @@ $(document).ready(function () {
             url: '/api/import-brands',
             method: 'POST',
             data: formData,
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             contentType: false,
             processData: false,
             success: function(response) {
@@ -338,7 +342,7 @@ $(document).ready(function () {
                 required: true,
             },
             'uploads[]': {
-                required: true,
+                // required: true,
                 fileExtension: true
             }
         },
@@ -350,7 +354,7 @@ $(document).ready(function () {
                 required: "Please enter valid description",
             },
             'uploads[]': {
-                required: "Please select an image file",
+                // required: "Please select an image file",
                 fileExtension: "Please upload files with jpg, jpeg, or png extensions only"
             }
         },
@@ -363,3 +367,4 @@ $(document).ready(function () {
         }
     });
 });
+

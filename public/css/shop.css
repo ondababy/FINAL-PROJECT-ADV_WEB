@@ -1,20 +1,26 @@
-.autocomplete-results {
+.search-container {
+    position: relative;
+}
+
+.suggestions-dropdown {
     position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
     border: 1px solid #ddd;
-    background: #fff;
-    z-index: 9999;
-    width: calc(100% - 2px);
-    max-height: 300px;
+    background-color: #fff;
+    z-index: 1000;
+    max-height: 200px;
     overflow-y: auto;
 }
 
-.autocomplete-results div {
-    padding: 10px;
+.suggestion-item {
+    padding: 8px;
     cursor: pointer;
 }
 
-.autocomplete-results div:hover {
-    background-color: #f0f0f0;
+.suggestion-item:hover {
+    background-color: #f1f1f1;
 }
 
 
@@ -31,31 +37,72 @@
 .custom-fade-out {
     opacity: 0;
 }
-
+/*
 .custom-bootbox {
-    background-color: #f8f9fa; /* Light background */
-    border-radius: 8px; /* Rounded corners */
-    padding: 20px; /* Padding inside the modal */
-    text-align: center; /* Center text */
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
     transition: opacity 2s ease-out;
 
 }
 
 .custom-bootbox .modal-header {
-    border-bottom: none; /* Remove header border */
+    border-bottom: none;
 }
 
 .custom-bootbox .modal-body {
-    font-size: 16px; /* Increase font size */
-    color: #333; /* Darker text color */
+    font-size: 16px;
+    color: #333;
 }
 
 .custom-bootbox .modal-footer {
-    display: none; /* Hide the footer to remove the OK button */
+    display: none;
 }
 
 .custom-bootbox.fade .modal-dialog {
     animation: fadeOut 2s forwards;
+} */
+
+.custom-bootbox {
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border: none;
+    padding: 0;
+}
+
+.custom-bootbox-content {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 12px;
+    color: #fff;
+}
+
+.custom-bootbox-content i {
+    font-size: 24px;
+    margin-right: 15px;
+}
+
+.custom-bootbox-success {
+    background-color: lightgreen;
+    color: #fff;
+}
+
+.custom-bootbox-error {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.custom-bootbox-warning {
+    background-color: #ffc107;
+    color: #fff;
+}
+
+.custom-bootbox .modal-header {
+    display: none;
 }
 
 
@@ -142,16 +189,16 @@
     /* border-radius: 30px;  */
     border: 2px solid black;
     overflow: hidden;
-    margin-bottom: 1.5rem; /* Increased margin between cards */
-    /* box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease; */
+    margin-bottom: 1.2rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
   .card-body {
-    /* display: flex; */
+    display: flex;
     font-family: 'Quicksand', sans-serif;
     flex-direction: column;
-    font-weight: 300;
+    font-weight: 250;
     /* justify-content: space-between; */
     padding: 1rem; /* Adjusted padding */
   }
@@ -161,15 +208,11 @@
     border: 1px solid black;
     top: 0;
     left: 0;
-    width: 50%;
-    height: 100px;
-    background: linear-gradient(
-        to right top,
-        white 35%,
-        lightblue 65%
-    );
+    width: 40%;
+    height: 85px;
+    background: radial-gradient(circle, lightblue, white 70%);
     z-index: -1;
-  }
+}
 
   .price-container {
     font-size: 0.84rem;
@@ -298,13 +341,22 @@
 .fixed-sidebar {
     font-family: 'Quicksand', sans-serif;
     position:sticky;
-    /* bottom: 0; */
-    width: 340px;
+    bottom: 0;
+    width: 365px;
     overflow-y: auto;
     border: 2px solid black;
     padding: 20px;
     background-color: #fff;
+    /* font-size: 1rem; */
     /* z-index: 1000; */
+}
+
+.nav-link-item .nav-text {
+    font-size: 16px; /* Adjust this value as needed */
+}
+
+.header-text .name {
+    font-size: 22px; /* Adjust this value as needed */
 }
 
 .search-bar-container {

@@ -8,10 +8,6 @@ use Illuminate\Support\Str;
 use DataTables;
 use Storage;
 
-//Excel Import
-use App\Imports\SuppliersImport;
-use Maatwebsite\Excel\Facades\Excel;
-
 class SupplierController extends Controller
 {
     /**
@@ -142,18 +138,5 @@ class SupplierController extends Controller
        return response()->json($suppliers);
    }
 
-   public function import(Request $request)
-   {
-       $request->validate([
-           'importFile' => ['required', 'file', 'mimes:xlsx,xls']
-       ]);
-
-       try {
-           Excel::import(new SuppliersImport, $request->file('importFile'));
-           return response()->json(['message' => 'Suppliers imported successfully'], 200);
-       } catch (\Exception $e) {
-           return response()->json(['error' => 'Failed to import suppliers', 'details' => $e->getMessage()], 500);
-       }
-   }
 
 }

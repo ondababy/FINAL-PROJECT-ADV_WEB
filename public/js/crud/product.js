@@ -1,5 +1,12 @@
 $(document).ready(function () {
+    var csrfToken = $('meta[name="csrf-token"]').attr('content');
+    // console.log('CSRF Token:', csrfToken);
 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': csrfToken
+        }
+    });
     // Function to show flash messages
     function showFlashMessage(message, type) {
         var flashMessage = $('#flash-message');
@@ -22,8 +29,6 @@ $(document).ready(function () {
         },
         dom: 'Bfrtip',
         buttons: [
-            // 'pdf',
-            // 'excel',
             {
                 text: 'Add Product',
                 className: 'btn btn-primary btn-rounded btn-margin',
@@ -32,7 +37,14 @@ $(document).ready(function () {
                     $('#productModal').modal('show');
                     $('#productUpdate').hide();
                     $('#productSubmit').show();
-                    $('#productImages').remove(); // Empty the image container
+                    $('#productImages').remove();
+                    $('#image').rules('add', {
+                        required: true,
+                        fileExtension: true,
+                        messages: {
+                            required: "Please upload an image",
+                        }
+                    });
                 }
             },
             {
@@ -56,13 +68,6 @@ $(document).ready(function () {
                     });
                 }
             },
-            {
-                text: 'Back',
-                className: 'btn btn-secondary btn-margin',
-                action: function (e, dt, node, config) {
-                    window.location.href = '/products';
-                }
-            }
         ],
         columns: [
             { data: 'id', title: 'ID' },
@@ -137,6 +142,10 @@ $(document).ready(function () {
                 }
             }
         ]
+    });
+
+    $('#refreshButton').on('click', function() {
+        table.ajax.reload();
     });
 
     // Populate brand and supplier options
@@ -214,7 +223,8 @@ $(document).ready(function () {
                         imagesHTML += `<img src="${path}" width="50" height="60" style="margin-right: 5px;">`;
                     }
                 });
-                $("#productform").append("<div id='productImages'>" + imagesHTML + "</div>");// Append images to the container
+                $("#productform").append("<div id='productImages'>" + imagesHTML + "</div>");
+                $('#image').rules('remove', 'required');
             }
 
         // Update Product
@@ -250,39 +260,42 @@ $(document).ready(function () {
         var table = $('#productTable').DataTable();
         var id = $(this).data('id');
         var $row = $(this).closest('tr');
-        console.log(id);
-        bootbox.confirm({
-            message: "Do you want to delete this Product?",
-            buttons: {
-                confirm: {
-                    label: 'Yes',
-                    className: 'btn-success'
-                },
-                cancel: {
-                    label: 'No',
-                    className: 'btn-danger'
-                }
-            },
-            callback: function (result) {
-                console.log(result);
-                if (result) {
-                    $.ajax({
-                        type: "DELETE",
-                        url: `/api/products/${id}`,
-                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-                        dataType: "json",
-                        success: function (data) {
-                            console.log(data);
-                            $row.fadeOut(4000, function () {
-                                table.row($row).remove().draw();
-                            });
-                            showFlashMessage("Product deleted successfully!", "success");
-                        },
-                        error: function (error) {
-                            bootbox.alert(data.error);
-                        }
-                    });
-                }
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to delete this product?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'No, cancel!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "DELETE",
+                    url: `/api/products/${id}`,
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                        $row.fadeOut(4000, function () {
+                            table.row($row).remove().draw();
+                        });
+                        Swal.fire(
+                            'Deleted!',
+                            'Product has been deleted.',
+                            'success'
+                        );
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        Swal.fire(
+                            'Error!',
+                            'There was a problem deleting the product.',
+                            'error'
+                        );
+                    }
+                });
             }
         });
     });
@@ -309,7 +322,6 @@ $(document).ready(function () {
                     $.ajax({
                         type: "POST",
                         url: `/api/product/restore/${id}`,
-                        headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                         dataType: "json",
                         success: function (data) {
                             console.log(data);
@@ -334,7 +346,6 @@ $(document).ready(function () {
             url: '/api/import-products',
             method: 'POST',
             data: formData,
-            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             contentType: false,
             processData: false,
             success: function(response) {
@@ -384,7 +395,7 @@ $(document).ready(function () {
                 digits: true // Apply the custom validation method for integers
             },
             'uploads[]': {
-                required: true,
+                // required: true,
                 fileExtension: true // Apply the custom validation method for file extensions
             }
         },
@@ -407,7 +418,7 @@ $(document).ready(function () {
                 digits: "Cost must be an integer"
             },
             'uploads[]': {
-                required: "Please select an image file",
+                // required: "Please select an image file",
                 fileExtension: "Please upload files with jpg, jpeg, or png extensions only"
             }
         },

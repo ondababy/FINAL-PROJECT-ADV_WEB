@@ -39,7 +39,7 @@
 }
 
 .btn-deactivate {
-    background-color: #ffcccc; /* Light red background */
+    /* background-color: #ffcccc; */
     color: #333; /* Darker text for contrast */
     border: 2px solid #ff9999; /* Matching border color */
     padding: 0.6rem 1.2rem; /* Slightly increased padding */
@@ -143,18 +143,21 @@ body.dark {
     top: 0;
     left: 0;
     height: 100%;
-    width: 250px;
+    width: 256px;
     padding: 10px 14px;
     background: var(--sidebar-color);
     transition: var(--tran-05);
     z-index: 100;
-    max-height: 1080px; /* Ensures the sidebar fits within a 1080p screen */
-    overflow-y: auto;  /* Adds scroll if content exceeds the height */
-    scrollbar-width: thin;
+    max-height: 1080px;
+    /* overflow-y: auto;
+    scrollbar-width: thin; */
     scrollbar-color: var(--primary-color) var(--primary-color-light);
     transition: width 0.3s;
+    overflow: hidden;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
-
 
 /* Custom scrollbar styles for webkit browsers */
 .sidebar::-webkit-scrollbar {
@@ -173,7 +176,6 @@ body.dark {
 }
 
 
-
 /* mga nilagay na bago */
 .sidebar.collapsed {
     width: 100px;
@@ -181,8 +183,6 @@ body.dark {
 
 .sidebar.collapsed header .toggle{
     transform: translateY(-50%) rotate(180deg);
-
-
 }
 
 #main {

@@ -297,4 +297,72 @@ $(document).ready(function () {
             }
         });
     });
+
+
+    $('#searchInput').on('input', function () {
+        var query = $(this).val();
+
+        if (query.length < 2) {
+            $('#products').empty();
+            loadMoreProducts();
+            return;
+        }
+
+        $.ajax({
+            url: '/api/search',
+            type: 'GET',
+            data: { query: query },
+            dataType: 'json',
+            success: function (data) {
+                console.log(data); // Log the response data
+                if (data.hits && data.hits.length > 0) {
+                    var resultsHtml = '';
+
+                    $.each(data.hits, function (key, item) {
+                        resultsHtml += `
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 border-dark product-card" data-id="${item.id}">
+                                    <div class="card-body gradient-background">
+                                        <div class="itemDetails">
+                                            <div id="carousel-${item.id}" class="carousel slide" data-ride="carousel">
+                                                <div class="carousel-inner">
+                                                    ${generateCarouselImages(item.img_path)}
+                                                </div>
+                                                <a class="carousel-control-prev" href="#carousel-${item.id}" role="button" data-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="sr-only">Previous</span>
+                                                </a>
+                                                <a class="carousel-control-next" href="#carousel-${item.id}" role="button" data-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="sr-only">Next</span>
+                                                </a>
+                                            </div>
+                                            <div class="itemText mt-3 text-center">
+                                                <p class="product-name">${item.name}</p>
+                                                <p class="brand-name">${item.brand_name}</p>
+                                                <p class="price-container">Php <span class="price">${item.cost}</span></p>
+                                                <div class="star-rating" style="justify-content: center;">
+                                                    ${generateStarRating(generateRandomStars())}
+                                                </div>
+                                                <p class="itemId" style="display: none;">${item.id}</p>
+                                            </div>
+                                            <div class="text-center btn-container">
+                                                <button type="button" class="btn btn-lightblue add mt-3">Add to cart</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                    });
+
+                    $('#products').html(resultsHtml); // Update the #products div with search results
+                } else {
+                    $('#products').html('<div class="col-12 text-center">No results found</div>');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+    });
 });

@@ -32,7 +32,7 @@ return [
     ],
 
     'meilisearch' => [
-        'host' => env('MEILISEARCH_HOST', 'http://127.0.0.1:7700'),
-        'key' => env('MEILISEARCH_KEY', 'ef8136dffb2b7b6e823da50805ee09fa42b9e123'), // Optional, if Meilisearch requires an API key
+        'host' => env('MEILISEARCH_HOST', ''),
+        'key' => env('MEILISEARCH_KEY', ''), // Optional, if Meilisearch requires an API key
     ],
 ];
